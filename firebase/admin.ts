@@ -17,9 +17,13 @@ function initFirebaseAdmin() {
     });
   }
 
+  const db = getFirestore();
+  // Tell Firestore to drop any undefined fields instead of erroring
+  db.settings({ ignoreUndefinedProperties: true });
+
   return {
     auth: getAuth(),
-    db: getFirestore(),
+    db,
   };
 }
 

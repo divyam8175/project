@@ -5,6 +5,7 @@ import { google } from "@ai-sdk/google";
 
 import { db } from "@/firebase/admin";
 import { feedbackSchema } from "@/constants";
+import { redirect } from 'next/navigation';
 
 export async function createFeedback(params: CreateFeedbackParams) {
   const { interviewId, userId, transcript, feedbackId } = params;
@@ -112,6 +113,11 @@ export async function getLatestInterviews(
 export async function getInterviewsByUserId(
   userId: string
 ): Promise<Interview[] | null> {
+  if (!userId) {
+    // This will send a 307 redirect to /sign-in instead of crashing
+    redirect('/sign-in');
+  }
+  
   const interviews = await db
     .collection("interviews")
     .where("userId", "==", userId)
